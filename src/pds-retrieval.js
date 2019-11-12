@@ -1,9 +1,11 @@
 import moment from "moment";
 import save from "./storage/file-system";
 import {generatePdsRetrievalQuery} from "./templates/pds-retrieval-template";
+import config from "./config";
 
 const retrievePatientDetails = (nhsNumber) => {
-  const pdsRetrievalQuery = generatePdsRetrievalQuery(moment().format('YYYYMMDDHHmmss'), 'to_asid', 'asid', nhsNumber);
+  const timestamp = moment().format('YYYYMMDDHHmmss');
+  const pdsRetrievalQuery = generatePdsRetrievalQuery(timestamp, config.pdsAsid, config.deductionsAsid, nhsNumber);
   return save(pdsRetrievalQuery, nhsNumber)
 };
 

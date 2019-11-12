@@ -2,6 +2,7 @@ import moment from "moment";
 import retrievePatientDetails from "./pds-retrieval";
 import save from "./storage/file-system";
 import {generatePdsRetrievalQuery} from "./templates/pds-retrieval-template";
+import config from "./config";
 
 jest.mock('./storage/file-system');
 jest.mock('moment');
@@ -17,7 +18,7 @@ describe('retrievePatientDetails', () => {
 
     return retrievePatientDetails(nhsNumber)
       .then(() => {
-        const pdsRetrievalQuery = generatePdsRetrievalQuery('20190228112548', 'to_asid', 'asid', nhsNumber);
+        const pdsRetrievalQuery = generatePdsRetrievalQuery('20190228112548', config.pdsAsid, config.deductionsAsid, nhsNumber);
         expect(save).toHaveBeenCalledWith(pdsRetrievalQuery, nhsNumber);
       });
   });
