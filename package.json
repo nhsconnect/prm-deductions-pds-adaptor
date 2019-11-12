@@ -2,12 +2,12 @@
   "name": "prm-deductions-pds-adaptor",
   "version": "1.0.0",
   "description": "",
-  "main": "src/app.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "jest",
     "build": "babel src -d build",
-    "start": "node build/app.js",
-    "start-local": "babel-node src/app.js"
+    "start": "node build/server.js",
+    "start-local": "babel-node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,8 @@
     "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "express": "^4.17.1"
