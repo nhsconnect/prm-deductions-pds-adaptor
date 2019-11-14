@@ -14,19 +14,25 @@ describe('app', () => {
     });
   });
 
-  describe('GET /patient/{nhs-number}', () => {
-    it('should return a successful status code', done => {
-      request(app)
-        .get('/patient/1234567890')
-        .expect(200)
-        .end(done);
-    });
-
+  describe('GET /patient/:nhsNumber', () => {
     it('should retrieve patient details using nhs number', done => {
       request(app)
         .get('/patient/1234567890')
-        .expect(() => {
+        .expect(res => {
           expect(getPatient).toHaveBeenCalledWith('1234567890')
+        })
+        .end(done);
+    });
+
+    it('should return patient details as json payload', done => {
+      getPatient.mockResolvedValue('some-patient');
+
+      request(app)
+        .get('/patient/1234567890')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect(res => {
+          expect(res.body).toEqual({payload: 'some-patient'})
         })
         .end(done);
     });

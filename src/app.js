@@ -8,8 +8,8 @@ app.get('/patient', (req, res) => {
 });
 
 app.get('/patient/:nhsNumber', (req, res) => {
-  getPatient(req.params.nhsNumber);
-  res.sendStatus(200);
+  getPatient(req.params.nhsNumber)
+    .then(patient => res.json({payload: patient}));
 });
 
 export default app;
