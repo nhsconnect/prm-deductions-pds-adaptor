@@ -1,10 +1,12 @@
 import moment from "moment";
+import uuid from 'uuid/v4'
 import {generatePdsRetrievalQuery} from "../templates/pds-retrieval-template";
 import config from "../config";
-import save from "../storage/file-system";
+import sendMessage from "../fake-mhs";
 
 export const getPatient = (nhsNumber) => {
+  const id = uuid();
   const timestamp = moment().format('YYYYMMDDHHmmss');
-  const pdsRetrievalQuery = generatePdsRetrievalQuery(timestamp, config.pdsAsid, config.deductionsAsid, nhsNumber);
-  return save(pdsRetrievalQuery, nhsNumber)
+  const pdsRetrievalQuery = generatePdsRetrievalQuery(id, timestamp, config.pdsAsid, config.deductionsAsid, nhsNumber);
+  return sendMessage(pdsRetrievalQuery, nhsNumber, id)
 };
