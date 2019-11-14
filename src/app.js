@@ -1,5 +1,5 @@
 import express from 'express';
-import retrievePatientDetails from "./pds-retrieval";
+import {getPatient} from "./services/patient";
 
 const app = express();
 
@@ -8,7 +8,7 @@ app.get('/patient', (req, res) => {
 });
 
 app.get('/patient/:nhsNumber', (req, res) => {
-  retrievePatientDetails(req.params.nhsNumber);
+  getPatient(req.params.nhsNumber);
   res.sendStatus(200);
 });
 

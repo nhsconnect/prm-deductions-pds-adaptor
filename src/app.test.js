@@ -1,8 +1,8 @@
 import request from 'supertest'
 import app from './app'
-import retrievePatientDetails from './pds-retrieval'
+import {getPatient} from "./services/patient";
 
-jest.mock('./pds-retrieval');
+jest.mock('./services/patient');
 
 describe('app', () => {
   describe('GET /patient', () => {
@@ -26,7 +26,7 @@ describe('app', () => {
       request(app)
         .get('/patient/1234567890')
         .expect(() => {
-          expect(retrievePatientDetails).toHaveBeenCalledWith('1234567890')
+          expect(getPatient).toHaveBeenCalledWith('1234567890')
         })
         .end(done);
     });
