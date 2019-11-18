@@ -5,7 +5,8 @@ import {getPatient} from "./patient";
 import sendMessage from "../fake-mhs";
 
 jest.mock('../fake-mhs');
-jest.mock('../consumer', () => callback => callback('some-patient-details'));
+jest.mock('../config/logging');
+jest.mock('../consumer', () => jest.fn().mockResolvedValue('some-patient-details'));
 jest.mock('moment');
 jest.mock('uuid/v4', () => jest.fn().mockReturnValue('some-uuid'));
 
