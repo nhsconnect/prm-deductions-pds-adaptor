@@ -1,10 +1,9 @@
 import express from 'express';
-import {logger as requestLogger} from "express-winston";
+import {errorLogger, logger as requestLogger} from "express-winston";
 import httpContext from "express-http-context";
-import {getPatient} from "./services/patient";
-import {checkIsAuthenticated} from "./middleware/auth";
 import {options} from "./config/logging";
 import {addCorrelationInfo} from "./middleware/correlation";
+import patient from "./api/patient";
 
 const app = express();
 
@@ -12,13 +11,13 @@ app.use(httpContext.middleware);
 app.use(addCorrelationInfo);
 app.use(requestLogger(options));
 
-app.get('/patient', (req, res) => {
-  res.sendStatus(501);
-});
+app.use('/patient', patient);
 
-app.get('/patient/:nhsNumber', checkIsAuthenticated, (req, res) => {
-  getPatient(req.params.nhsNumber)
-    .then(patient => res.json({payload: patient}));
+app.use(errorLogger(options));
+
+app.use((err, req, res, next) => {
+  res.status(500)
+    .json({error: err.message});
 });
 
 export default app;

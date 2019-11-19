@@ -13,7 +13,7 @@ export const options = {
     format.json()
   ),
   transports: [
-    new transports.Console()
+    new transports.Console({handleExceptions: true})
   ]
 };
 

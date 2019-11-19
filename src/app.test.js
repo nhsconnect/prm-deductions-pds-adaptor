@@ -1,8 +1,12 @@
-import request from 'supertest'
-import app from './app'
+import request from 'supertest';
+import app from './app';
 import {getPatient} from "./services/patient";
 
 jest.mock('./services/patient');
+jest.mock('express-winston', () => ({
+  errorLogger: () => (req, res, next) => next(),
+  logger: () => (req, res, next) => next()
+}));
 
 describe('app', () => {
   describe('GET /patient', () => {
@@ -24,7 +28,7 @@ describe('app', () => {
         .get('/patient/1234567890')
         .set("Authorization", "correct-key")
         .expect(res => {
-          expect(getPatient).toHaveBeenCalledWith('1234567890')
+          expect(getPatient).toHaveBeenCalledWith('1234567890');
         })
         .end(done);
     });
@@ -38,7 +42,7 @@ describe('app', () => {
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
-          expect(res.body).toEqual({payload: 'some-patient'})
+          expect(res.body).toEqual({payload: 'some-patient'});
         })
         .end(done);
     });
