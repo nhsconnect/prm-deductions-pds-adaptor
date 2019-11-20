@@ -1,8 +1,8 @@
-import moment from "moment";
-import {generatePdsRetrievalQuery} from "../templates/pds-retrieval-template";
-import config from "../config";
-import {getPatient} from "./patient";
-import sendMessage from "../fake-mhs";
+import moment from 'moment';
+import { generatePdsRetrievalQuery } from '../templates/pds-retrieval-template';
+import config from '../config';
+import { getPatient } from './patient';
+import sendMessage from '../fake-mhs';
 
 jest.mock('../fake-mhs');
 jest.mock('../config/logging');
@@ -19,17 +19,21 @@ describe('getPatient', () => {
       format: () => '20190228112548'
     });
 
-    return getPatient(nhsNumber)
-      .then(() => {
-        const pdsRetrievalQuery = generatePdsRetrievalQuery('some-uuid', '20190228112548', config.pdsAsid, config.deductionsAsid, nhsNumber);
-        expect(sendMessage).toHaveBeenCalledWith(pdsRetrievalQuery, nhsNumber, 'some-uuid');
-      });
+    return getPatient(nhsNumber).then(() => {
+      const pdsRetrievalQuery = generatePdsRetrievalQuery(
+        'some-uuid',
+        '20190228112548',
+        config.pdsAsid,
+        config.deductionsAsid,
+        nhsNumber
+      );
+      expect(sendMessage).toHaveBeenCalledWith(pdsRetrievalQuery, nhsNumber, 'some-uuid');
+    });
   });
 
   it('should return first message from queue', () => {
-    return getPatient(nhsNumber)
-      .then(patientDetails => {
-        expect(patientDetails).toEqual('some-patient-details')
-      })
+    return getPatient(nhsNumber).then(patientDetails => {
+      expect(patientDetails).toEqual('some-patient-details');
+    });
   });
 });

@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from './app';
-import {getPatient} from "./services/patient";
+import { getPatient } from './services/patient';
 
 jest.mock('./services/patient');
 jest.mock('express-winston', () => ({
@@ -26,8 +26,8 @@ describe('app', () => {
     it('should retrieve patient details using nhs number', done => {
       request(app)
         .get('/patient/1234567890')
-        .set("Authorization", "correct-key")
-        .expect(res => {
+        .set('Authorization', 'correct-key')
+        .expect(() => {
           expect(getPatient).toHaveBeenCalledWith('1234567890');
         })
         .end(done);
@@ -38,11 +38,11 @@ describe('app', () => {
 
       request(app)
         .get('/patient/1234567890')
-        .set("Authorization", "correct-key")
+        .set('Authorization', 'correct-key')
         .expect(200)
         .expect('Content-Type', /json/)
         .expect(res => {
-          expect(res.body).toEqual({payload: 'some-patient'});
+          expect(res.body).toEqual({ payload: 'some-patient' });
         })
         .end(done);
     });
@@ -57,7 +57,7 @@ describe('app', () => {
     it('should return a 403 when authorization key is incorrect', done => {
       request(app)
         .get('/patient/1234567890')
-        .set("Authorization", "incorrect-key")
+        .set('Authorization', 'incorrect-key')
         .expect(403)
         .end(done);
     });
