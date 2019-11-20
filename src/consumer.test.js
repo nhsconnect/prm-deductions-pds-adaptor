@@ -25,13 +25,7 @@ describe('consumeMessageFromQueue', () => {
   it('should reject the promise when there is an error connecting to the broker', () => {
     connect.mockImplementation((config, callback) => callback('some-error-happened'));
 
-    return consumeMessageFromQueue()
-      .then(() => {
-        fail('Promise was not rejected')
-      })
-      .catch(err => {
-        expect(err).toEqual('some-error-happened');
-      });
+    return expect(consumeMessageFromQueue()).rejects.toEqual("some-error-happened");
   });
 
   it('should subscribe to the queue with the correct config', () => {
@@ -44,13 +38,7 @@ describe('consumeMessageFromQueue', () => {
   it('should reject the promise when there is an error subscribing to the queue', () => {
     subscribe.mockImplementation((config, callback) => callback('some-error-happened'));
 
-    return consumeMessageFromQueue()
-      .then(() => {
-        fail('Promise was not rejected')
-      })
-      .catch(err => {
-        expect(err).toEqual('some-error-happened');
-      });
+    return expect(consumeMessageFromQueue()).rejects.toEqual("some-error-happened");
   });
 
   it('should read the message from the queue with the correct encoding', () => {
@@ -63,13 +51,7 @@ describe('consumeMessageFromQueue', () => {
   it('should reject the promise when there is an error reading the message', () => {
     readString.mockImplementation((encoding, callback) => callback('some-error-happened'));
 
-    return consumeMessageFromQueue()
-      .then(() => {
-        fail('Promise was not rejected')
-      })
-      .catch(err => {
-        expect(err).toEqual('some-error-happened');
-      });
+    return expect(consumeMessageFromQueue()).rejects.toEqual("some-error-happened");
   });
 
   it('should pass the message to the provided callback function and disconnect', () => {

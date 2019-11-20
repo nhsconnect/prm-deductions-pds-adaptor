@@ -4,7 +4,9 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "test": "jest --setupFiles dotenv/config",
+    "lint": "eslint src/",
+    "unit": "jest --setupFiles dotenv/config",
+    "test": "npm run lint && npm run unit",
     "build": "babel src -d build --ignore '**/*.test.js'",
     "start": "node build/server.js",
     "start-local": "babel-node -r node_modules/dotenv/config src/server.js"
@@ -18,7 +20,12 @@
     "@babel/core": "^7.6.4",
     "@babel/node": "^7.6.3",
     "@babel/preset-env": "^7.6.3",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-jest": "^23.0.4",
+    "eslint-plugin-prettier": "^3.1.1",
     "jest": "^24.9.0",
+    "prettier": "^1.19.1",
     "supertest": "^4.0.2"
   },
   "dependencies": {

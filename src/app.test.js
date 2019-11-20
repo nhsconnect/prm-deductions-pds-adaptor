@@ -27,7 +27,7 @@ describe('app', () => {
       request(app)
         .get('/patient/1234567890')
         .set("Authorization", "correct-key")
-        .expect(res => {
+        .expect(() => {
           expect(getPatient).toHaveBeenCalledWith('1234567890');
         })
         .end(done);
