@@ -13,6 +13,10 @@ app.use(httpContext.middleware);
 app.use(addCorrelationInfo);
 app.use(requestLogger(options));
 
+app.get('/health', (req, res) => {
+  res.sendStatus(200);
+});
+
 app.use('/patient', patient);
 
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
