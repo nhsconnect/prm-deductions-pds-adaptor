@@ -1,14 +1,6 @@
 version: 0.2
 
 phases:
-  install:
-    commands:
-      - apt-get update
-      - apt-get install -y jq
-  pre_build:
-    commands:
-      - chmod a+x ./utils/*
-      - eval $(./utils/aws-cli-assumerole.sh -r $ASSUME_ROLE_NAME)
   build:
     commands:
       - npm install
