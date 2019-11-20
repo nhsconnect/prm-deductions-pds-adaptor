@@ -1,4 +1,12 @@
-export const generatePatientRetrievalResponse = (id, queryId, timestamp, receivingAsid, sendingAsid, nhsNumber, gpPracticeNumber) =>
+export const generatePatientRetrievalResponse = (
+  id,
+  queryId,
+  timestamp,
+  receivingAsid,
+  sendingAsid,
+  nhsNumber,
+  gpPracticeNumber
+) =>
   `<PRPA_IN020000UK02 xmlns="urn:hl7-org:v3">
     <id root="${id}" />
     <creationTime value="${timestamp}" />

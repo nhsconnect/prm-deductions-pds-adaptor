@@ -3,7 +3,7 @@ export const checkIsAuthenticated = (req, res, next) => {
     ? process.env.AUTHORIZATION_KEYS.split(',')
     : [];
 
-  const authorizationKey = req.get("Authorization");
+  const authorizationKey = req.get('Authorization');
   if (!authorizationKey) {
     res.sendStatus(401);
     return;
