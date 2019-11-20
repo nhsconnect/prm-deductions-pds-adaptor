@@ -1,0 +1,74 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Service to handle message generation for PDS communication",
+    "version": "1.0.0",
+    "title": "PDS Adaptor"
+  },
+  "tags": [
+    {
+      "name": "patient",
+      "description": "Retrieve patient details"
+    }
+  ],
+  "paths": {
+    "/patient/{nhsNumber}": {
+      "get": {
+        "tags": [
+          "patient"
+        ],
+        "summary": "Retrieves patient information by NHS number",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "nhsNumber",
+            "in": "path",
+            "description": "NHS number of the patient",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "401": {
+            "description": "Authorization header missing"
+          },
+          "403": {
+            "description": "Authorization key invalid"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "Response": {
+      "type": "object",
+      "properties": {
+        "payload": {
+          "type": "string",
+          "description": "Response from PDS containing patient details",
+          "format": "xml"
+        }
+      }
+    }
+  }
+}

@@ -4,6 +4,8 @@ import httpContext from 'express-http-context';
 import { options } from './config/logging';
 import { addCorrelationInfo } from './middleware/correlation';
 import patient from './api/patient';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './swagger.json';
 
 const app = express();
 
@@ -12,6 +14,8 @@ app.use(addCorrelationInfo);
 app.use(requestLogger(options));
 
 app.use('/patient', patient);
+
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(errorLogger(options));
 
