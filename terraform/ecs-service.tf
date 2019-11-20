@@ -17,9 +17,9 @@ resource "aws_ecs_service" "ecs-service" {
     subnets         = "${local.private_subnets}"
   }
 
-  # load_balancer {
-  #   target_group_arn = "${local.deductions_public_alb_tg_arn}"
-  #   container_name   = "${var.service_container_name}"
-  #   container_port   = "${var.service_container_port}"
-  # }
+  load_balancer {
+    target_group_arn = "${local.deductions_private_pds_a_alb_tg_arn}"
+    container_name   = "${var.service_container_name}"
+    container_port   = "${var.service_container_port}"
+  }
 }
