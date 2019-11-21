@@ -1,4 +1,4 @@
-import { connect } from 'stompit';
+import { ConnectFailover } from 'stompit';
 import consumeMessageFromQueue from './consumer';
 import config from './config';
 
@@ -7,25 +7,24 @@ jest.mock('stompit');
 describe('consumeMessageFromQueue', () => {
   const readString = jest.fn();
   const subscribe = jest.fn();
+  const connect = jest.fn();
   const disconnect = jest.fn();
 
   beforeEach(() => {
     readString.mockImplementation((encoding, callback) => callback(null, 'some-message-body'));
     subscribe.mockImplementation((config, callback) => callback(null, { readString }));
-    connect.mockImplementation((config, callback) => callback(null, { subscribe, disconnect }));
+    connect.mockImplementation(callback => callback(null, { subscribe, disconnect }));
+    ConnectFailover.mockImplementation(() => ({ connect }));
   });
 
-  it('should connect to the broker with the correct config', () => {
+  it('should connect to the broker with the correct url', () => {
     return consumeMessageFromQueue().then(() => {
-      expect(connect).toHaveBeenCalledWith(
-        { host: config.queueHost, port: config.queuePort },
-        expect.anything()
-      );
+      expect(ConnectFailover).toHaveBeenCalledWith(config.queueUrl);
     });
   });
 
   it('should reject the promise when there is an error connecting to the broker', () => {
-    connect.mockImplementation((config, callback) => callback('some-error-happened'));
+    connect.mockImplementation(callback => callback('some-error-happened'));
 
     return expect(consumeMessageFromQueue()).rejects.toEqual('some-error-happened');
   });

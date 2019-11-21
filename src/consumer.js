@@ -1,9 +1,11 @@
-import { connect } from 'stompit';
+import { ConnectFailover } from 'stompit';
 import config from './config';
 
 const consumeMessageFromQueue = () =>
   new Promise((resolve, reject) => {
-    connect({ host: config.queueHost, port: config.queuePort }, (err, client) => {
+    const queue = new ConnectFailover(config.queueUrl);
+
+    queue.connect((err, client) => {
       if (err) return reject(err);
 
       client.subscribe({ destination: config.queueName }, (err, msg) => {
