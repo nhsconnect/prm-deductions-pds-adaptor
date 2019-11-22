@@ -7,6 +7,7 @@ const addCorrelationInfo = format(info => {
 });
 
 export const options = {
+  level: 'debug',
   format: format.combine(addCorrelationInfo(), format.timestamp(), format.json()),
   transports: [new transports.Console({ handleExceptions: true })]
 };
