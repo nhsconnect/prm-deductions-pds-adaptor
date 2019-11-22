@@ -1,17 +1,19 @@
-import stompit from 'stompit';
+import { ConnectFailover } from 'stompit';
 import moment from 'moment';
 import uuid from 'uuid/v4';
 import save from './storage/file-system';
 import config from './config';
 import { generatePatientRetrievalResponse } from './templates/pds-response-template';
 
-const putResponseOnQueue = response =>
-  stompit.connect({ host: config.queueHost, port: config.queuePort }, (err, client) => {
+const putResponseOnQueue = response => {
+  const queue = new ConnectFailover(config.queueUrl);
+  queue.connect((err, client) => {
     const frame = client.send({ destination: config.queueName });
     frame.write(response);
     frame.end();
     client.disconnect();
   });
+};
 
 const delay = fn => setTimeout(fn, 5000);
 
