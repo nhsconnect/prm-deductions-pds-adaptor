@@ -3,6 +3,7 @@ import consumeMessageFromQueue from './consumer';
 import config from './config';
 
 jest.mock('stompit');
+jest.mock('./config/logging');
 
 describe('consumeMessageFromQueue', () => {
   const readString = jest.fn();

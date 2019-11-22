@@ -4,14 +4,18 @@ import uuid from 'uuid/v4';
 import save from './storage/file-system';
 import config from './config';
 import { generatePatientRetrievalResponse } from './templates/pds-response-template';
+import logger from './config/logging';
 
 const putResponseOnQueue = response => {
+  logger.debug('Putting patient details response on queue');
+
   const queue = new ConnectFailover(config.queueUrl);
   queue.connect((err, client) => {
     const frame = client.send({ destination: config.queueName });
     frame.write(response);
     frame.end();
     client.disconnect();
+    logger.debug('Successfully put patient details response on queue');
   });
 };
 
