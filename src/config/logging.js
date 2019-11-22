@@ -14,4 +14,8 @@ export const options = {
 
 const logger = createLogger(options);
 
+logger.error = (message, error) => {
+  logger.log('error', `${message}: ${error.message}`, { error, stack: error.stack });
+};
+
 export default logger;
