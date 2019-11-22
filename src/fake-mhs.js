@@ -11,6 +11,13 @@ const putResponseOnQueue = response => {
 
   const queue = new ConnectFailover(config.queueUrl);
   queue.connect((err, client) => {
+    if (err) {
+      console.error(err);
+    }
+    client.on('error', err => {
+      console.error(err);
+    });
+
     const frame = client.send({ destination: config.queueName });
     frame.write(response);
     frame.end();
