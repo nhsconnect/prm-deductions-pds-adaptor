@@ -4,11 +4,11 @@ variable "region" {
 }
 
 variable "environment" {
-  type = "string"
+  type = string
 }
 
 variable "component_name" {
-  type = "string"
+  type = string
 }
 
 variable "task_family" {}
