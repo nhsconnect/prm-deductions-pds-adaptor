@@ -7,10 +7,15 @@ const addCorrelationInfo = format(info => {
 });
 
 export const options = {
+  level: 'debug',
   format: format.combine(addCorrelationInfo(), format.timestamp(), format.json()),
   transports: [new transports.Console({ handleExceptions: true })]
 };
 
 const logger = createLogger(options);
+
+logger.error = (message, error) => {
+  logger.log('error', `${message}: ${error.message}`, { error, stack: error.stack });
+};
 
 export default logger;

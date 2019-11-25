@@ -5,7 +5,8 @@ locals {
     environment_variables        = [
       { name = "PDS_ASID", value = data.aws_ssm_parameter.pds_asid.value },
       { name = "DEDUCTIONS_ASID", value = data.aws_ssm_parameter.deductions_asid.value },
-      { name = "MHS_QUEUE", value = "failover:(${data.aws_ssm_parameter.amqp-endpoint_0.value},${data.aws_ssm_parameter.amqp-endpoint_1.value})" },
+      { name = "MHS_QUEUE_URL", value = "failover:(${data.aws_ssm_parameter.amqp-endpoint_0.value},${data.aws_ssm_parameter.amqp-endpoint_1.value})" },
+      { name = "MHS_QUEUE_NAME", value = "deductions.mhs" },
     ]
     secret_environment_variables = [
       { name = "AUTHORIZATION_KEYS", valueFrom = data.aws_ssm_parameter.authorization_keys.arn }

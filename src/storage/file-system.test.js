@@ -2,6 +2,7 @@ import { promises as fsPromises } from 'fs';
 import save from './file-system';
 
 jest.mock('moment', () => jest.fn().mockReturnValue({ format: () => 'some-timestamp' }));
+jest.mock('../config/logging');
 
 describe('save', () => {
   it('should store the data in the local-datastore folder', () => {
