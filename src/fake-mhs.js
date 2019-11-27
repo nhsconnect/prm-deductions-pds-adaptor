@@ -17,7 +17,7 @@ const putResponseOnQueue = response => {
   queue.on('error', error => logError(error));
 
   queue.connect((err, client) => {
-    if (err) logError(err);
+    if (err) return logError(err);
     client.on('error', error => logError(error));
 
     const frame = client.send({ destination: config.queueName });
