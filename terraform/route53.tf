@@ -9,11 +9,3 @@ resource "aws_route53_record" "pds-adaptor-r53-record" {
   ttl     = "300"
   records = [local.deductions_private_alb_dns]
 }
-
-resource "aws_route53_record" "gp2gp-r53-record" {
-  zone_id = data.aws_ssm_parameter.root_zone_id.value
-  name    = "dev.gp2gp"
-  type    = "CNAME"
-  ttl     = "300"
-  records = [local.deductions_private_alb_dns]
-}
