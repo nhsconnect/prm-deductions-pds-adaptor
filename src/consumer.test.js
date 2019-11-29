@@ -12,16 +12,48 @@ describe('consumeMessageFromQueue', () => {
   const disconnect = jest.fn();
 
   beforeEach(() => {
+    config.queueUrl1 = 'stomp+ssl://some-url:some-port';
+    config.queueUrl2 = 'tcp://other-url:other-port';
+    config.queueUsername = 'some-username';
+    config.queuePassword = 'some-password';
+
     readString.mockImplementation((encoding, callback) => callback(null, 'some-message-body'));
     subscribe.mockImplementation((config, callback) => callback(null, { readString }));
     connect.mockImplementation(callback => callback(null, { subscribe, disconnect }));
-    ConnectFailover.mockImplementation(() => ({ connect }));
+    ConnectFailover.mockImplementation(() => ({ connect, on: () => {} }));
   });
 
-  it('should connect to the broker with the correct url', () => {
+  it('should connect to the broker with the correct config', () => {
     return consumeMessageFromQueue().then(() => {
-      expect(ConnectFailover).toHaveBeenCalledWith(config.queueUrl);
+      expect(ConnectFailover).toHaveBeenCalledWith([
+        {
+          connectHeaders: {
+            login: 'some-username',
+            passcode: 'some-password'
+          },
+          host: 'some-url',
+          port: 'some-port',
+          ssl: true
+        },
+        {
+          connectHeaders: {
+            login: 'some-username',
+            passcode: 'some-password'
+          },
+          host: 'other-url',
+          port: 'other-port',
+          ssl: false
+        }
+      ]);
     });
+  });
+
+  it('should throw if the queue urls are not configured correctly', () => {
+    config.queueUrl1 = 'some-url-without-protocol:some-port';
+
+    return expect(consumeMessageFromQueue()).rejects.toEqual(
+      new Error('Queue url should have the format protocol://host:port')
+    );
   });
 
   it('should reject the promise when there is an error connecting to the broker', () => {
