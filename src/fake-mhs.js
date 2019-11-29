@@ -6,10 +6,6 @@ import config from './config';
 import { generatePatientRetrievalResponse } from './templates/pds-response-template';
 import logger from './config/logging';
 
-const logError = error => {
-  logger.error('There was an error when connecting to the queue broker', error);
-};
-
 const generateQueueConfig = url => {
   const urlParts = url.match(/(.*):\/\/(.*):(.*)/);
   if (!urlParts || urlParts.length < 4)
@@ -33,10 +29,12 @@ const putResponseOnQueue = response => {
     generateQueueConfig(config.queueUrl1),
     generateQueueConfig(config.queueUrl2)
   ]);
-  queue.on('error', error => logError(error));
+  queue.on('error', error =>
+    logger.debug(`There was an error when connecting to the queue broker: ${error.message}`)
+  );
 
   queue.connect((err, client) => {
-    if (err) return logError(err);
+    if (err) return logger.error('There was an error when connecting to the queue broker', err);
 
     const frame = client.send({ destination: config.queueName });
     frame.write(response);

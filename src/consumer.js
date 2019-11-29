@@ -26,7 +26,9 @@ const consumeMessageFromQueue = () =>
       generateQueueConfig(config.queueUrl1),
       generateQueueConfig(config.queueUrl2)
     ]);
-    queue.on('error', error => reject(error));
+    queue.on('error', error =>
+      logger.debug(`There was an error when connecting to the queue broker: ${error.message}`)
+    );
 
     queue.connect((err, client) => {
       if (err) return reject(err);
