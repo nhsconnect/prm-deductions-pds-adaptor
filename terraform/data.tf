@@ -27,18 +27,6 @@ data "aws_ssm_parameter" "deductions_asid" {
   name = "/NHS/${var.environment}-${data.aws_caller_identity.current.account_id}/pds-adaptor/deductions_asid"
 }
 
-data "aws_ssm_parameter" "stomp-endpoint_0" {
-  name = "/NHS/${var.environment}-${data.aws_caller_identity.current.account_id}/stomp-endpoint/0"
-}
-
-data "aws_ssm_parameter" "stomp-endpoint_1" {
-  name = "/NHS/${var.environment}-${data.aws_caller_identity.current.account_id}/stomp-endpoint/1"
-}
-
-data "aws_secretsmanager_secret" "amq-username" {
-  name = "/nhs/${var.environment}/mq/app-username"
-}
-
-data "aws_secretsmanager_secret" "amq-password" {
-  name = "/nhs/${var.environment}/mq/app-password"
+data "aws_ssm_parameter" "mhs_url" {
+  name = "/NHS/deductions-${data.aws_caller_identity.current.account_id}/mhs-${var.environment}/outbound_url"
 }

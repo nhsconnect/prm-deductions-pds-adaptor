@@ -5,14 +5,11 @@ locals {
     environment_variables        = [
       { name = "PDS_ASID", value = data.aws_ssm_parameter.pds_asid.value },
       { name = "DEDUCTIONS_ASID", value = data.aws_ssm_parameter.deductions_asid.value },
-      { name = "MHS_QUEUE_NAME", value = "deductions.mhs" },
-      { name = "MHS_QUEUE_URL_1", value = data.aws_ssm_parameter.stomp-endpoint_0.value },
-      { name = "MHS_QUEUE_URL_2", value = data.aws_ssm_parameter.stomp-endpoint_1.value },
+      { name = "MHS_URL", value = data.aws_ssm_parameter.mhs_url.value },
+      { name = "NODE_ENV", value = var.environment },
     ]
     secret_environment_variables = [
       { name = "AUTHORIZATION_KEYS", valueFrom = data.aws_ssm_parameter.authorization_keys.arn },
-      { name = "MHS_QUEUE_USERNAME", valueFrom = data.aws_secretsmanager_secret.amq-username.arn },
-      { name = "MHS_QUEUE_PASSWORD", valueFrom = data.aws_secretsmanager_secret.amq-password.arn },
     ]
 }
 

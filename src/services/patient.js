@@ -1,13 +1,13 @@
 import moment from 'moment';
 import uuid from 'uuid/v4';
 import { generatePdsRetrievalQuery } from '../templates/pds-retrieval-template';
+import * as mhsGatewayFake from './mhs-gateway-fake';
+import * as mhsGateway from './mhs-gateway';
 import config from '../config';
-import sendMessage from '../fake-mhs';
-import consumeMessageFromQueue from '../consumer';
 import logger from '../config/logging';
 
 export const getPatient = nhsNumber => {
-  logger.info(`Requesting details of patient with nhs number ${nhsNumber}`);
+  logger.info(`Requesting details of patient with NHS number ${nhsNumber}`);
 
   const id = uuid();
   const timestamp = moment().format('YYYYMMDDHHmmss');
@@ -18,10 +18,10 @@ export const getPatient = nhsNumber => {
     config.deductionsAsid,
     nhsNumber
   );
-  return sendMessage(pdsRetrievalQuery, nhsNumber, id)
-    .then(consumeMessageFromQueue)
-    .then(patientDetails => {
-      logger.info(`Received details of patient with nhs number ${nhsNumber}`);
-      return patientDetails;
-    });
+
+  if (config.isLocal) {
+    return mhsGatewayFake.sendMessage(pdsRetrievalQuery, nhsNumber, id);
+  }
+
+  return mhsGateway.sendMessage(pdsRetrievalQuery);
 };
