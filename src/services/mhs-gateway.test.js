@@ -3,6 +3,7 @@ import { sendMessage } from './mhs-gateway';
 import config from '../config';
 
 jest.mock('axios', () => ({ post: jest.fn().mockResolvedValue('some-response') }));
+jest.mock('../config/logging');
 
 describe('mhs-gateway', () => {
   describe('sendMessage', () => {

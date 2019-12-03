@@ -5,6 +5,7 @@ describe('logging', () => {
     it('should replace secret values with obfuscated value', () => {
       const formatter = obfuscateSecrets();
 
+      const messageSymbol = Symbol('message');
       const result = formatter.transform({
         message: `some-message`,
         error: {
@@ -16,7 +17,8 @@ describe('logging', () => {
               passcode: '1234567'
             }
           }
-        }
+        },
+        [messageSymbol]: 'some-symbol-message'
       });
 
       expect(result).toEqual({
@@ -30,7 +32,8 @@ describe('logging', () => {
               passcode: '********'
             }
           }
-        }
+        },
+        [messageSymbol]: 'some-symbol-message'
       });
     });
   });
