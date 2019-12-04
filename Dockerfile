@@ -1,13 +1,7 @@
-FROM mhart/alpine-node:11 AS builder
-WORKDIR /app
-COPY . .
-RUN npm install
-RUN npm run build
-
-FROM mhart/alpine-node
+FROM mhart/alpine-node:11
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
-COPY --from=builder /app/build .
+COPY node_modules/ ./
+COPY build/ /app/build
 EXPOSE 3000
 CMD ["node", "server.js"]
