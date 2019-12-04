@@ -4,6 +4,7 @@ set -Eeo pipefail
 
 AWS_DEFAULT_REGION=eu-west-2
 IMAGE_REPO_NAME=deductions/pds-adaptor
+NHS_ENVIRONMENT=dev
 
 function tf_plan {
   operation=$1
@@ -15,9 +16,9 @@ function tf_plan {
   terraform init
   terraform get # modules
   if [[ "${operation}" == "create" ]]; then
-    terraform plan -var task_image_tag=$IMAGE_TAG -var-file=terraform.tfvars -out="nhs_deployment.tfplan"
+    terraform plan -var task_image_tag=$IMAGE_TAG -var-file=$NHS_ENVIRONMENT.tfvars -out="nhs_deployment.tfplan"
   elif [[ "${operation}" == "destroy" ]]; then
-    terraform plan -var task_image_tag=$IMAGE_TAG -var-file=terraform.tfvars -out="nhs_deployment.tfplan" -destroy
+    terraform plan -var task_image_tag=$IMAGE_TAG -var-file=$NHS_ENVIRONMENT.tfvars -out="nhs_deployment.tfplan" -destroy
   else
     echo "Unknown operation (should be create or destroy), got: ${operation}"
     exit 1
@@ -103,8 +104,8 @@ case "${command}" in
   _wait_ecs)
       aws ecs wait services-stable \
         --region $AWS_DEFAULT_REGION \
-        --cluster dev-deductions-private-ecs-cluster \
-        --services dev-pds-adaptor-service
+        --cluster $NHS_ENVIRONMENT-deductions-private-ecs-cluster \
+        --services $NHS_ENVIRONMENT-pds-adaptor-service
       ;;
   wait_ecs)
       dojo -c Dojofile-infra "./tasks _wait_ecs"
