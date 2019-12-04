@@ -79,3 +79,8 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks tf_apply
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks wait_ecs
