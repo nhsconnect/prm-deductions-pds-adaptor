@@ -4,7 +4,7 @@ COPY package*.json ./
 COPY node_modules/ ./node_modules
 COPY build/ /app/
 
-RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+RUN apk update && apk add openssl ca-certificates && rm -rf /var/cache/apk/*
 COPY ./certs/deductions.crt /usr/local/share/ca-certificates/deductions.crt
 RUN update-ca-certificates
 

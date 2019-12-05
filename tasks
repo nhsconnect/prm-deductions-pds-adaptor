@@ -110,6 +110,21 @@ case "${command}" in
   wait_ecs)
       dojo -c Dojofile-infra "./tasks _wait_ecs"
       ;;
+  test_docker)
+      ./tasks test_tls_trust
+      ;;
+  test_tls_trust)
+      echo "Validating that pds-adaptor image trusts the MHS outbound TLS certs"
+      docker_login
+      AWS_ACCOUNT_ID=$(dojo -c Dojofile-infra "aws sts get-caller-identity | jq -r .Account")
+      REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME
+      COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
+      IMAGE_TAG=${COMMIT_HASH}
+      docker pull $REPOSITORY_URI:$IMAGE_TAG
+      #FIXME: parameter for outbound MHS
+      MHS_OUTBOUND_HOST=mhs-outbound.local.internal-mhs.nhs.net
+      docker run -t $REPOSITORY_URI:$IMAGE_TAG sh -c "echo -n | openssl s_client -connect ${MHS_OUTBOUND_HOST}:443 -showcerts | grep 'Verify return code: 0'"
+      ;;
   *)
       echo "Invalid command: '${command}'"
       exit 1
