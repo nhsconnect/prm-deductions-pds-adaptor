@@ -96,3 +96,16 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks wait_ecs
+      - test_dev:
+          clean_workspace: true
+          jobs:
+            smoke:
+              resources:
+                - deductions-private # run in deductions private network
+                - dev # dev environment
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks smoke_pds

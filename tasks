@@ -38,6 +38,16 @@ function docker_login {
   eval $(dojo -c Dojofile-infra "aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION")
 }
 
+function get_aws_secret {
+  secret_id=$1
+  json=$(aws ssm get-parameter --with-decryption --region $AWS_DEFAULT_REGION --name $secret_id)
+  if [ $? != 0 ]; then
+    >&2 echo "Failed to obtain AWS secret: $secret_id"
+    exit 5
+  fi
+  echo $json | jq -r ".Parameter.Value"
+}
+
 command="$1"
 case "${command}" in
   _dep)
@@ -125,6 +135,16 @@ case "${command}" in
       MHS_OUTBOUND_HOST=mhs-outbound.local.internal-mhs.nhs.net
       docker run -t $REPOSITORY_URI:$IMAGE_TAG sh -c "echo -n | openssl s_client -connect ${MHS_OUTBOUND_HOST}:443 -showcerts | grep 'Verify return code: 0'"
       docker run -t -v $PWD/tests:/tests $REPOSITORY_URI:$IMAGE_TAG sh -c "node /tests/test_certs.js"
+      ;;
+  _smoke_pds)
+      AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)
+      auth_token=$(get_aws_secret "/NHS/$NHS_ENVIRONMENT-${AWS_ACCOUNT_ID}/pds-adaptor/authorization_keys")
+      curl --fail -X GET "http://$NHS_ENVIRONMENT.pds-adaptor.patient-deductions.nhs.uk/patient/9658218865" \
+        -H "accept: application/json" \
+        -H "Authorization: ${auth_token}"
+      ;;
+  smoke_pds)
+      dojo -c Dojofile-infra "./tasks _smoke_pds"
       ;;
   *)
       echo "Invalid command: '${command}'"
