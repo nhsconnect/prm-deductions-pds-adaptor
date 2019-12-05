@@ -11,7 +11,8 @@ export const sendMessage = message =>
         headers: {
           'Interaction-Id': 'QUPA_IN040000UK32',
           'sync-async': false,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'from-asid': config.deductionsAsid
         }
       }
     )
