@@ -124,6 +124,7 @@ case "${command}" in
       #FIXME: parameter for outbound MHS
       MHS_OUTBOUND_HOST=mhs-outbound.local.internal-mhs.nhs.net
       docker run -t $REPOSITORY_URI:$IMAGE_TAG sh -c "echo -n | openssl s_client -connect ${MHS_OUTBOUND_HOST}:443 -showcerts | grep 'Verify return code: 0'"
+      docker run -t -v $PWD/tests:/tests $REPOSITORY_URI:$IMAGE_TAG sh -c "node /tests/test_certs.js"
       ;;
   *)
       echo "Invalid command: '${command}'"
