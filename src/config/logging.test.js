@@ -8,6 +8,7 @@ describe('logging', () => {
       const messageSymbol = Symbol('message');
       const result = formatter.transform({
         message: `some-message`,
+        data: 'secret-payload',
         error: {
           port: 61614,
           connectArgs: {
@@ -23,6 +24,7 @@ describe('logging', () => {
 
       expect(result).toEqual({
         message: `some-message`,
+        data: '********',
         error: {
           port: 61614,
           connectArgs: {

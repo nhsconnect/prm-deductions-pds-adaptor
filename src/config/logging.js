@@ -4,7 +4,7 @@ import cloneDeep from 'lodash.clonedeep';
 import { getCorrelationId } from '../middleware/correlation';
 
 const OBFUSCATED_VALUE = '********';
-const SECRET_KEYS = ['passcode'];
+const SECRET_KEYS = ['passcode', 'data'];
 
 export const obfuscateSecrets = format(info => {
   const updated = cloneDeep(info);
