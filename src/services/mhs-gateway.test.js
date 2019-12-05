@@ -2,7 +2,7 @@ import axios from 'axios';
 import { sendMessage } from './mhs-gateway';
 import config from '../config';
 
-jest.mock('axios', () => ({ post: jest.fn().mockResolvedValue('some-response') }));
+jest.mock('axios', () => ({ post: jest.fn().mockResolvedValue({ data: 'some-response-data' }) }));
 jest.mock('../config/logging');
 
 describe('mhs-gateway', () => {
@@ -26,7 +26,7 @@ describe('mhs-gateway', () => {
 
     it('should return the response body', () => {
       return sendMessage('some-message').then(response => {
-        expect(response).toEqual('some-response');
+        expect(response).toEqual('some-response-data');
       });
     });
 

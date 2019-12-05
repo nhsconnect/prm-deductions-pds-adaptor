@@ -16,9 +16,9 @@ export const sendMessage = message =>
         }
       }
     )
-    .then(patientDetails => {
+    .then(response => {
       logger.info(`Received details of patient from MHS`);
-      return patientDetails;
+      return response.data;
     })
     .catch(error => {
       logger.error('There was an error when sending a request to MHS', error);
