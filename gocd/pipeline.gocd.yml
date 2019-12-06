@@ -101,8 +101,7 @@ pipelines:
           jobs:
             smoke:
               resources:
-                - deductions-private # run in deductions private network
-                - dev # dev environment
+                - docker
               tasks:
                 - exec:
                     command: /bin/bash
