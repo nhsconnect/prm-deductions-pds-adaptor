@@ -141,7 +141,7 @@ case "${command}" in
       auth_token=$(get_aws_secret "/NHS/$NHS_ENVIRONMENT-${AWS_ACCOUNT_ID}/pds-adaptor/authorization_keys")
       curl --fail -X GET "http://$NHS_ENVIRONMENT.pds-adaptor.patient-deductions.nhs.uk/patient/9658218865" \
         -H "accept: application/json" \
-        -H "Authorization: ${auth_token}"
+        -H "Authorization: ${auth_token}" | grep 'BARTON-UPON-HUMBER'
       ;;
   smoke_pds)
       dojo -c Dojofile-infra "./tasks _smoke_pds"
