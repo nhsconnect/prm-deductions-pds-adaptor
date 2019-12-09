@@ -30,7 +30,7 @@ export const generatePdsRetrievalQuery = (id, timestamp, receivingAsid, sendingA
         </author1>
         <query>
             <historicDataIndicator>
-                <value code="0" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.36" />
+                <value code="1" codeSystem="2.16.840.1.113883.2.1.3.2.4.17.36" />
                 <semanticsText>historicDataIndicator</semanticsText>
             </historicDataIndicator>
             <person.id>
