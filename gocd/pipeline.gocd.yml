@@ -1,4 +1,25 @@
 format_version: 4
+common:
+  deploy_job: &deploy_job
+    resources:
+      - docker
+    tasks:
+      - exec:
+          command: /bin/bash
+          arguments:
+            - -c
+            - ./tasks tf_plan create
+      - exec:
+          command: /bin/bash
+          arguments:
+            - -c
+            - ./tasks tf_apply
+      - exec:
+          command: /bin/bash
+          arguments:
+            - -c
+            - ./tasks wait_ecs
+
 pipelines:
   "prm-deductions-pds-adaptor":
     group: deductions
@@ -74,29 +95,31 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks test_docker
-      - deploy_dev:
+
+  "prm-deductions-pds-adaptor.dev":
+    group: deductions
+    label_template: "${git[:8]}"
+    materials:
+      git:
+        type: configrepo
+      app:
+        pipeline: prm-deductions-pds-adaptor
+        stage: test_docker
+      base_infra:
+        pipeline: prm-deductions-infra
+        stage: deploy_dev
+      mhs:
+        pipeline: prm-mhs-infra-opentest
+        stage: deploy #FIXME: should depend on test, but tests are failing now
+    environment_variables:
+      NHS_ENVIRONMENT: dev
+    stages:
+      - deploy:
           clean_workspace: true
           jobs:
-            deploy:
-              resources:
-                - docker
-              tasks:
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks tf_plan create
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks tf_apply
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks wait_ecs
-      - test_dev:
+            deploy: *deploy_job
+
+      - test:
           clean_workspace: true
           jobs:
             smoke:
