@@ -136,15 +136,17 @@ case "${command}" in
       ;;
   test_tls_trust)
       echo "Validating that pds-adaptor image trusts the MHS outbound TLS certs"
+      check_env
       docker_login
       AWS_ACCOUNT_ID=$(dojo -c Dojofile-infra "aws sts get-caller-identity | jq -r .Account")
       REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME
       COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
       IMAGE_TAG=${COMMIT_HASH}
       docker pull $REPOSITORY_URI:$IMAGE_TAG
-      MHS_OUTBOUND_HOST=mhs-outbound.${NHS_ENVIRONMENT}.internal-mhs.nhs.net
+      MHS_OUTBOUND_URL=$(dojo -c Dojofile-infra "aws ssm get-parameter --region $AWS_DEFAULT_REGION --name /NHS/deductions-${AWS_ACCOUNT_ID}/mhs-${NHS_ENVIRONMENT}/outbound_url | jq -r '.Parameter.Value'")
+      MHS_OUTBOUND_HOST=$(echo $MHS_OUTBOUND_URL | sed 's#https://##')
       docker run -t $REPOSITORY_URI:$IMAGE_TAG sh -c "echo -n | openssl s_client -connect ${MHS_OUTBOUND_HOST}:443 -showcerts | grep 'Verify return code: 0'"
-      docker run -t -v $PWD/tests:/tests $REPOSITORY_URI:$IMAGE_TAG sh -c "node /tests/test_certs.js"
+      docker run -t -e MHS_OUTBOUND_URL=$MHS_OUTBOUND_URL -v $PWD/tests:/tests $REPOSITORY_URI:$IMAGE_TAG sh -c "node /tests/test_certs.js"
       ;;
   _smoke_pds)
       AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)

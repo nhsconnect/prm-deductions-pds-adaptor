@@ -90,6 +90,8 @@ pipelines:
               resources:
                 - dev
                 - mhs
+              environment_variables:
+                NHS_ENVIRONMENT: dev
               tasks:
                 - exec:
                     command: /bin/bash

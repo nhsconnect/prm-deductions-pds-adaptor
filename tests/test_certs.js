@@ -1,7 +1,6 @@
 const https = require('https');
 
-//FIXME: parameter for MHS address
-https.get('https://mhs-outbound.dev.internal-mhs.nhs.net', (resp) => {
+https.get(process.env.MHS_OUTBOUND_URL, (resp) => {
   let data = '';
 
   // A chunk of data has been recieved.
