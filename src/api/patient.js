@@ -1,7 +1,7 @@
 import express from 'express';
 import { checkIsAuthenticated } from '../middleware/auth';
 import { getPatient } from '../services/patient';
-
+import logger from '../config/logging';
 const router = express.Router();
 
 router.get('/', (req, res) => {
@@ -10,8 +10,14 @@ router.get('/', (req, res) => {
 
 router.get('/:nhsNumber', checkIsAuthenticated, (req, res, next) => {
   getPatient(req.params.nhsNumber)
-    .then(patient => res.json({ payload: patient }))
-    .catch(next);
+    .then(patient => {
+      logger.info({ patient: patient });
+      return res.json({ payload: patient });
+    })
+    .catch(err => {
+      logger.info({ error: err });
+      next();
+    });
 });
 
 export default router;

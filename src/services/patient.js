@@ -19,6 +19,8 @@ export const getPatient = nhsNumber => {
     nhsNumber
   );
 
+  logger.info({ sendRetrievalQuery: pdsRetrievalQuery });
+
   if (config.isLocal) {
     return mhsGatewayFake.sendMessage(pdsRetrievalQuery, nhsNumber, id);
   }
