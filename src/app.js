@@ -19,7 +19,7 @@ app.get('/health', (req, res) => {
 
 app.use('/patient', patient);
 
-app.get('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(errorLogger(options));
 
