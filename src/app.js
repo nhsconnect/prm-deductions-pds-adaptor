@@ -1,10 +1,10 @@
 import express from 'express';
-import { errorLogger, logger as requestLogger } from 'express-winston';
 import httpContext from 'express-http-context';
+import { errorLogger, logger as requestLogger } from 'express-winston';
+import swaggerUi from 'swagger-ui-express';
+import patient from './api/patient';
 import { options } from './config/logging';
 import { addCorrelationInfo } from './middleware/correlation';
-import patient from './api/patient';
-import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './swagger.json';
 
 const app = express();
@@ -19,7 +19,7 @@ app.get('/health', (req, res) => {
 
 app.use('/patient', patient);
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.get('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(errorLogger(options));
 
