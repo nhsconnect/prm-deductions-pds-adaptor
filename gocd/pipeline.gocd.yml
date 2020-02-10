@@ -21,9 +21,9 @@ common:
             - ./tasks wait_ecs
 
 pipelines:
-  "prm-deductions-pds-adaptor":
+  'prm-deductions-pds-adaptor':
     group: deductions
-    label_template: "${git[:8]}"
+    label_template: '${git[:8]}'
     materials:
       git:
         type: configrepo
@@ -55,8 +55,6 @@ pipelines:
               artifacts:
                 - build:
                     source: build
-                - build:
-                    source: node_modules
               tasks:
                 - exec:
                     command: /bin/bash
@@ -74,10 +72,6 @@ pipelines:
                     stage: build
                     job: npm_install
                     source: build
-                - fetch:
-                    stage: build
-                    job: npm_install
-                    source: node_modules
                 - exec:
                     command: /bin/bash
                     arguments:
@@ -99,9 +93,9 @@ pipelines:
                       - -c
                       - ./tasks test_docker
 
-  "prm-deductions-pds-adaptor.dev":
+  'prm-deductions-pds-adaptor.dev':
     group: deductions
-    label_template: "${git[:8]}"
+    label_template: '${git[:8]}'
     materials:
       git:
         type: configrepo
