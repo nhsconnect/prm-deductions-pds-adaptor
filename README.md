@@ -17,7 +17,7 @@ Run the tests with `npm test`.
 
 ## Start the app locally
 
-Run a development server with `npm run start-local`.
+Run a development server with `npm run start:local`.
 
 ## Start the app in production mode
 
